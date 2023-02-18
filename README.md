@@ -10,14 +10,17 @@ Scripts which need regulons selection:
 *
 *
 *
+
 Scripts which need data on all regulons in order to be able to run:
 *
 *
 *
 
 ## For reproducibility
-Step 1: Create a new Rproject in directory where all the scripts are saved in R version 4.1.0, Rstudio version 1.4.1712
-Step 2: Run script 0_1_create_packrat_session.R to install all packages  
+Step 1: Create a new Rproject in the directory where all the scripts are saved (R version 4.1.0, Rstudio version 1.4.1712)
+
+Step 2: Run  0_1_create_packrat_session.R to install all packages  
+
 For more information on packarat visit: https://github.com/rstudio/packrat/
 
 
