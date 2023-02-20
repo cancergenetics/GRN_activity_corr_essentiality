@@ -15,7 +15,7 @@ cancer_list = c("aml", "blca", "brca", "coad",
 
 methods <- c("Expression", "Consensus", "ULM", "MLM", "VIPER", "W.Mean", "W.Sum")
 
-regulons_types <- c("grndb")
+regulons_types <- c("aracne", "grndb", "dorothea")
 
 lm <- NULL
 
