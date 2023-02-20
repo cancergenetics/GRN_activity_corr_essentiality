@@ -7,14 +7,19 @@ Each script can be run in Rstudio. However, some of the scripts require more com
 IMPORTANT: Whilst most of the code is fully automated, the user should select at the start of each run the regulons for analysis (ARACNe, DoRothEA or GRNdb) or comment out the ones not necessary.
 
 Scripts which need regulons selection:
-*
-*
-*
+* 3_0_get_activity_values.R
+* 4_0_run_correlations.R
+* 5_0_make_skittlesplot.R
+* 6_0_generate_data_faceted_barcharts_signif_drivers.R
+* 6_1_make_faceted_barcharts_plots_signif_drivers.R
+* 7_0_cles.R
+* 7_1_generate_data_cles_barchart.R
+* 7_2_make_faceted_barcharts_cles.R
+
 
 Scripts which need data on all regulons in order to be able to run:
-*
-*
-*
+* 5_1_get_medians.R
+* 5_3_linear_modelling.R
 
 ## For reproducibility
 Step 1: Create a new Rproject in the directory where all the scripts are saved (R version 4.1.0, Rstudio version 1.4.1712)
