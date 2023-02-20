@@ -1,12 +1,23 @@
+#This script creates Fig 3 and dotplots for each activity method
+#Input: from the correlations between each gene's correlation between activity and essentiality
+        #it takes number of genes used for each regulon type for each cancer type, output of script 4_0
+#Input: For each activity method, takes the average correlation between activtiy and essentiality across
+        #all genes, paired with each regulon, output of script 4_0
+#Output: dotplots for each activity method showing the average |R| with cancer matched and cancer mismatched regulons
+
 library(tidyverse)
 library(cowplot)
 library(reshape2)
 library(Cairo)
 
 #select regulons
-#only works with aracne and grndb regulons, because dorothea regulons are not cancer-type specific
+#only works with aracne and grndb regulons, because dorothea regulons are not cancer-type matched
 regulons <- "aracne" #OR
-#regulons <- "grndb"
+regulons <- "grndb"
+
+cancer_list = c("aml", "blca", "brca", "coad",
+                "gbm", "hnsc", "kirc", "luad",
+                "paad", "stad")
 
 #setting working directory to load necessary files
 input_dir <- paste0("./results/correlation_matrices/", regulons)
@@ -22,15 +33,46 @@ plot_dots <- function(matrix, plotname, label, regulon_method){ #plot for activi
     group_by(Var1) %>%
     mutate(rank = rank(-value))
   
-  cancer_specific_ranks_regulons <- melted_matrix %>%
+  cancer_matched_ranks_regulons <- melted_matrix %>%
     filter(regulon_type == "Cancer type-matched") %>%
     pull(rank)
   
-  cancer_non_specific_ranks_regulons <- melted_matrix %>%
+  cancer_mismatched_ranks_regulons <- melted_matrix %>%
     filter(regulon_type != "Cancer type-matched") %>%
     pull(rank)
   
-  rank_test_result <- wilcox.test(cancer_specific_ranks_regulons, cancer_non_specific_ranks_regulons, 
+  rank_test_result <- wilcox.test(cancer_matched_ranks_regulons, cancer_mismatched_ranks_regulons, 
+                                  paired = FALSE, alternative =  "two.sided")
+  
+  for (cancer_type in cancer_list) {
+    if(regulons != "dorothea") {
+      no_genes <- read.csv(paste0("./results/results_matrices_per_combination/", 
+                                  regulons, "/", regulons, "_", cancer_type, "_", cancer_type,
+                                  "/corr_scores_filtered_", regulons, "_", cancer_type,  
+                                  "_", cancer_type, ".csv"), row.names = 1) %>%
+        nrow()
+    } else {
+      no_genes <- read.csv(paste0("./results/results_matrices_per_combination/", 
+                                  regulons, "/", regulons, "_", cancer_type,
+                                  "/corr_scores_filtered_", regulons, "_", cancer_type,
+                                  ".csv"), row.names = 1) %>%
+        nrow()    
+    }
+    
+    melted_matrix[melted_matrix[ ,"Var1"] == cancer_type, "no_genes"] <- no_genes
+  }
+  
+  melted_matrix$Var1 <- str_c(melted_matrix$Var1, "\nN=", melted_matrix$no_genes)
+  
+  if (rank_test_result[["p.value"]] > 0.001) {
+    rank_test_label <- paste0("Unpaired Two-Samples Wilcoxon Test \n p-value = ", 
+                              round(rank_test_result[["p.value"]], digits = 3))  
+  } else {
+    rank_test_label <- "Unpaired Two-Samples Wilcoxon Test \n p-value < 0.001"
+  }
+  
+  
+  rank_test_result <- wilcox.test(cancer_matched_ranks_regulons, cancer_mismatched_ranks_regulons, 
                                   paired = FALSE, alternative =  "two.sided")
   
   plot <- melted_matrix %>%
@@ -39,14 +81,12 @@ plot_dots <- function(matrix, plotname, label, regulon_method){ #plot for activi
     geom_point(
       aes(colour = factor(regulon_type)), 
       size = 2,
-      #alpha = .2,
       position = position_jitter(
         seed = 1, width = .2
       )) +
-    annotate("text", label = paste0("Unpaired Two-Samples Wilcoxon Test \n p-value = ", 
-                                    round(rank_test_result[["p.value"]], digits = 3)), 
-             x = 8.3, y = 0.235) +
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(0.1, 0.24)) +
+    annotate("text", label = rank_test_label, 
+             x = 8.3, y = 0.27) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(0.1, 0.285)) +
     scale_colour_manual(values = c("#F46036", "#04080F"), 
                         name = "Regulons Type", 
                         labels = c('Cancer type-\nmatched', 'Cancer type-\nmismatched')) +
@@ -58,8 +98,7 @@ plot_dots <- function(matrix, plotname, label, regulon_method){ #plot for activi
          x = "Cancer", 
          y = as.expression(bquote(bar('|R'[.(label)]*'|')),  
                            subtitle = paste0(regulon_method, " Regulons")),
-         caption = paste0("Unpaired Two-Samples Wilcoxon Test p-value = ", 
-                          round(rank_test_result[["p.value"]], digits = 3))) 
+         caption = rank_test_label) 
   ggsave(plotname, plot = plot, width = 24, height = 15, dpi = 1000, units = "cm", device = cairo_pdf) 
   
   return(plot)
