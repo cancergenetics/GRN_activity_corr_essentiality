@@ -2,6 +2,9 @@
 #it removes entrez ids, duplicate entries and only keeps cell lines present in both expression and essentiality datasets
 #it creates a label for every cancer type we analyze
 
+#Input: 21Q4 Depmap uprocessed data downloaded at the start of the pipeline, i.e., gene expression, gene effect and cell line information
+#Output: processed Depmap data for downstream use
+
 library(tidyverse)
 
 #loading raw downloaded data

@@ -1,4 +1,6 @@
 #This script processes the TCGA data so it can be used to update the GRNdb regulons
+#Input: Treehouse data RNA-Seq and sample info
+#Output: processed RNA-seq matrix for each cancer type
 
 library(tidyverse)
 library(impute)
@@ -8,20 +10,21 @@ treehouse.sample.info <- read_tsv("./tcga_data/clinical_TumorCompendium_v10_Poly
 treehouse_data <- as.data.frame(read_tsv("./tcga_data/TumorCompendium_v10_PolyA_hugo_log2tpm_58581genes_2019-07-25.tsv"))
 
 #separate large datframe into each cancer type
-aml <- treehouse.sample.info %>% #this needs extra filtering to only select TCGA samples
+#some need extra filtering to only select TCGA samples
+aml <- treehouse.sample.info %>% 
   dplyr::filter(treehouse.sample.info$disease == "acute myeloid leukemia" & treehouse.sample.info$site_id == "TCGA") %>%
   pull("th_sampleid")
 
 gbm <- treehouse.sample.info %>%
-  dplyr::filter(treehouse.sample.info$disease == "glioblastoma multiforme") %>%
+  dplyr::filter(treehouse.sample.info$disease == "glioblastoma multiforme" & treehouse.sample.info$site_id == "TCGA") %>%
   pull("th_sampleid")
 
 luad <- treehouse.sample.info %>%
-  dplyr::filter(treehouse.sample.info$disease == "lung adenocarcinoma") %>%
+  dplyr::filter(treehouse.sample.info$disease == "lung adenocarcinoma" & treehouse.sample.info$site_id == "TCGA") %>%
   pull("th_sampleid")
 
 coad <- treehouse.sample.info %>%
-  dplyr::filter(treehouse.sample.info$disease == "colon adenocarcinoma") %>%
+  dplyr::filter(treehouse.sample.info$disease == "colon adenocarcinoma" & treehouse.sample.info$site_id == "TCGA") %>%
   pull("th_sampleid")
 
 brca <- treehouse.sample.info %>%

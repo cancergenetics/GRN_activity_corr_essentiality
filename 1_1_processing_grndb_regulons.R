@@ -1,4 +1,6 @@
-###This script processes grndb regulons
+###This script processes grndb regulons to update the MOR so it includes directionality for TF-Target interactions
+#Input: unprocessed GRNdb regulons and RNA-Seq matrices for each TCGA cancer type
+#Output: processed GRNdb regulons
 
 library(tidyverse)
 

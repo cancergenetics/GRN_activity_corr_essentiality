@@ -1,5 +1,5 @@
 #This script calculates the mean variance in RNA-Seq for each cancer type
-#Input: Processed DepMap data on gene effect, gene expression and cell-line info
+#Input: Processed DepMap data on gene effect, gene expression and cell line info
 #Output: .csv containing RNA-Seq variance per cancer type
 
 library(tidyverse)

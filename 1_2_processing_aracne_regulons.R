@@ -1,4 +1,6 @@
-###This script processes aracne regulons
+###This script processes aracne regulons to update edges
+#Input: no files as input, just ARACNe regulons from aracne.networks package
+#Ouput: processed ARACNe regulons for each cancer type
 
 library(aracne.networks)
 library(tidyverse)
