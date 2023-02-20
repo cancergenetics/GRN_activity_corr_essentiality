@@ -178,6 +178,8 @@ for (cancer_label in cancer_list) { #loop1 for each cancer
     #correlation matrix saved before filtering (needed for barplots)
     write.csv(corr_act_exp_matrix, file = paste0(input_dir, "/", "corr_scores_filtered_", regulon, "_", cancer_label, ".csv"))
   
+    corr_act_exp_matrix[ ,2:15] <- abs(corr_act_exp_matrix[ ,2:15]) #takes absolute values
+
     #mean correlations
     viper_corr_pearson[cancer_label, regulon] <- mean(corr_act_exp_matrix$VIPER.cor) 
     ulm_corr_pearson[cancer_label, regulon] <- mean(corr_act_exp_matrix$ULM.cor)
