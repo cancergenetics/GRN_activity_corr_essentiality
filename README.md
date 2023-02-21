@@ -20,6 +20,7 @@ Scripts which need regulons selection:
 Scripts which need data on all regulons in order to be able to run:
 * 5_1_get_medians.R
 * 5_3_linear_modelling.R
+* 6_2_variance_per_gene_method_comparison.R 
 
 ## For reproducibility
 Step 1: Create a new Rproject in the directory where all the scripts are saved (R version 4.1.0, Rstudio version 1.4.1712)
