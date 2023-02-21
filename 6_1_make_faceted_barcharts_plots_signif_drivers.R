@@ -1,3 +1,9 @@
+#This script creates Fig 4B,C,D,S3
+#Input: .csv files output by script 6_0
+#Output: barcharts counting absolute correlations 
+        #barcharts showing the two types of correlations: increase in sensitivity with increase in activity/expression
+                                                         #increase in sensitivity with deacrease in activity/expression
+
 library(stringr)
 library(magrittr)
 library(tidyverse)
@@ -5,8 +11,14 @@ library(Cairo)
 
 #select regulons
 regulons <- "aracne" #OR
-#regulons <- "grndb" #OR
-#regulons <- "dorothea"
+regulons <- "grndb" #OR
+regulons <- "dorothea"
+
+#select cancer list analysis
+cancer_list = c("aml", "blca", "brca", "coad",
+                "gbm", "hnsc", "kirc", "luad",
+                "paad", "stad") #OR
+cancer_list = c("pancancer") #only works with dorothea regulons
 
 #1. creating plots for absolute correlations
 barchart_absolute <- NULL
@@ -40,15 +52,15 @@ barchart_absolute$Method <- factor(bar_signif_correlations$Method,
 if (cancer_list == "pancancer") {
   height <- 7.5
   width <- 15
-  filename_absolute <- paste0("./results/plots/barcharts/1percent_", regulons , "_barcharts_5methods.pdf")
-  filename_pos_vs_neg <- paste0("./results/plots/barcharts/1percent_", regulons , "_pos_vs_neg_5methods.pdf")
+  filename_absolute <- paste0("./plots/barcharts/1percent_", regulons, "_barcharts_5methods.pdf")
+  filename_pos_vs_neg <- paste0("./plots/barcharts/1percent_", regulons, "_pos_vs_neg_5methods.pdf")
   axis_label_absolute <- "Genes significantly correlated\nwith CRISPR gene sensitivity (%)"
   axis_label_pos_vs_neg <- "Genes significantly correlated\nwith CRISPR gene sensitivity (count)"
 } else {
   height <- 10
   width <- 38
-  filename_absolute <- paste0("./results/plots/barcharts/", regulons , "_barcharts_5methods.pdf")
-  filename_pos_vs_neg <- paste0("./results/plots/barcharts/", regulons , "_pos_vs_neg_5methods.pdf")
+  filename_absolute <- paste0("./plots/barcharts/", regulons, "_barcharts_5methods.pdf")
+  filename_pos_vs_neg <- paste0("./plots/barcharts/", regulons, "_pos_vs_neg_5methods.pdf")
   axis_label_absolute <- "Genes significantly correlated with CRISPR gene sensitivity (%)"
   axis_label_pos_vs_neg <- "Genes significantly correlated with CRISPR gene sensitivity (count)"
 }
@@ -64,7 +76,7 @@ plot_barchart_absolute <- barchart_absolute %>%
   theme_bw(base_size = 16) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
-  geom_text(x = 25, y = 1, label = barchart$total_drivers) +
+  geom_text(x = 25, y = 1, label = barchart_absolute$total_drivers) +
   labs(title = paste0(regulons, " regulons"), x = "Method", y = axis_label_absolute) +
   facet_wrap(vars(Cancer), nrow = 2)  
 
@@ -75,7 +87,7 @@ barchart_pos_vs_neg <- NULL
 for (cancer in cancer_list) {
   barchart_pos_vs_neg_cancer <- read.csv(paste0("./results/barcharts_data/", 
                                      cancer, "_", regulons, "_pos_vs_neg_corr.csv"))
-  barchart_pos_vs_neg <- rbind(barchart_pos_vs_neg, barchart_cancer)  
+  barchart_pos_vs_neg <- rbind(barchart_pos_vs_neg, barchart_pos_vs_neg_cancer)  
 }
 
 barchart_pos_vs_neg$count <- ifelse(barchart_pos_vs_neg$Pearsons_R == "R≤0", -1 * barchart_pos_vs_neg$count, barchart_pos_vs_neg$count)

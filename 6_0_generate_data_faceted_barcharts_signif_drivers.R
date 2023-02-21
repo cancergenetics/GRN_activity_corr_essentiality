@@ -1,3 +1,7 @@
+#This scripts generates the data in order to create Fig 4B,C,D, S3
+#Input: correlations between activity and essentiality, no. cell lines per cancer type
+#Output: data to be fed for batcharts in script 6_1
+
 library(tidyverse)
 
 #select regulons
@@ -9,7 +13,7 @@ regulons <- "dorothea"
 cancer_list = c("aml", "blca", "brca", "coad",
                 "gbm", "hnsc", "kirc", "luad",
                 "paad", "stad") #OR
-cancer_list = c("pancancer") 
+cancer_list = c("pancancer") #only works with dorothea regulons
 
 methods <- c("ULM", "VIPER", "W.Mean", "Consensus", "Expression")
 
@@ -53,7 +57,7 @@ for (cancer_label in cancer_list) {
       
       no_of_cell_lines <- read.csv(paste0("./results/results_matrices_per_combination/", 
                                           regulons, "/", regulons, "_", cancer_label, "_", cancer_label,
-                                          "/", regulons, "_", cancer_label, "_", cancer_label, "_", regulons, "_",
+                                          "/", regulons, "_", cancer_label, "_", cancer_label, "_",
                                           "consensus.csv"), row.names = 1) %>%
         ncol()
     }
