@@ -19,8 +19,8 @@ mkdir ./results/correlation_matrices/grndb
 mkdir ./results/correlation_matrices/dorothea
 
 mkdir ./results/barcharts_data
-
-mkir ./results/plots_data
+mkdir ./results/plots_data
+mkdir ./results/go_enrichment
 
 mkdir plots
 mkdir ./plots/skittles_plots
