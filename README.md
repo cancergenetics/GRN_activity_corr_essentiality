@@ -10,6 +10,8 @@ Scripts which need regulons selection:
 * 3_0_get_activity_values.R
 * 4_0_run_correlations.R
 * 5_0_make_skittlesplot.R
+* 5_4_go_analysis.R
+* 5_5_fishers_test_master_regulators.R
 * 6_0_generate_data_faceted_barcharts_signif_drivers.R
 * 6_1_make_faceted_barcharts_plots_signif_drivers.R
 * 7_0_cles.R
