@@ -26,16 +26,8 @@ for (cancer_label in cancer_list) {
       no_of_cell_lines <- read.csv("./results/results_matrices_per_combination/dorothea/dorothea_pancancer/dorothea_pancancer_dorothea_consensus.csv", row.names = 1) %>%
         ncol()
     } else { #regulons not dorothea, pancancer
-      corr_driver_act_exp_matrix <- read.csv(paste0("./results/results_matrices_per_combination/", 
-                                                    regulons, "/", regulons, "_", cancer_label,
-                                                    "/corr_scores_filtered_", regulons, "_", cancer_label, 
-                                                    ".csv"), row.names = 1)
-      
-      no_of_cell_lines <- read.csv(paste0("./results/results_matrices_per_combination/", 
-                                          regulons, "/", regulons, "_", cancer_label,
-                                          "/", regulons, "_", cancer_label, "_", regulons, "_",
-                                          "consensus.csv"), row.names = 1) %>%
-        ncol()
+           print("You can't pair cancer type-specific regulons with the pancancer analysis")
+
     }
   } else { 
     if (regulons == "dorothea") {
