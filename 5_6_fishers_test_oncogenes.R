@@ -1,14 +1,15 @@
-#Input: correlations for each cancer type
-#Input: List of MRs downloaded from Paull et al (2021)
+#Input: correlations for each cancer type/pancancer
+#Input: List of oncogenes downloaded from the cancer gene census
 #Output: no files, just prints the p-values of Fisher's exact tests #that verify whether 
-        #there is an enrichment for master regulators in the genes with higher activity than expression
+#there is an enrichment for oncogenes in the genes with higher activity than expression
+#Note: to download the cancer gene census data you will need a COSMIC account
+#Go at https://cancer.sanger.ac.uk/census and press "Export: CSV" and save the data as "cgc.csv"
 
-library(readxl)
 library(tidyverse)
 
 #select regulons:
 regulons <- "aracne" #OR
-regulons <- "grndb" # OR
+regulons <- "grndb" #OR
 regulons <- "dorothea"
 
 cancer_list = c("aml", "gbm", "luad", "brca", "coad",
@@ -16,21 +17,10 @@ cancer_list = c("aml", "gbm", "luad", "brca", "coad",
 
 methods <- c("ULM", "Viper", "W.Mean", "Consensus", "Expression")
 
-master_regulators <- read_xlsx("./mmc2.xlsx", sheet = 2, col_names = FALSE) %>%
-  dplyr::select(-"...2") %>%
-  mutate(`...1` = replace(`...1`, `...1` == "laml", "aml"))
-   
 
-
-mrs_list <- list()
-
-for (cancer_label in cancer_list) {
-  mrs_list[[cancer_label]] <- master_regulators[master_regulators$...1 == cancer_label, -1] %>%
-    pivot_longer(cols = everything(), values_to = "MR") %>%
-    drop_na() %>%
-    pull("MR") %>%
-    unique()
-}
+oncogenes <- read.csv("./cgc.csv") %>% 
+  dplyr::filter(grepl("oncogene", Role.in.Cancer)) %>% #oncogenes filtering
+  dplyr::pull(Gene.Symbol)
 
 
 fisher_test_list <- list()
@@ -69,12 +59,12 @@ for (cancer_label in cancer_list) {
   
   contingency_table <- data.frame(matrix(nrow = 2, ncol = 2))
   colnames(contingency_table) <- c("consensus_wins", "expression_wins")
-  rownames(contingency_table) <- c("MR", "non_MR")
+  rownames(contingency_table) <- c("oncogene", "non_oncogene")
   
-  contingency_table["MR", "consensus_wins"] <- length(consensus_wins[consensus_wins %in% mrs_list[[cancer_label]]])
-  contingency_table["MR", "expression_wins"] <- length(consensus_wins[expression_wins %in% mrs_list[[cancer_label]]])
-  contingency_table["non_MR", "consensus_wins"] <- length(consensus_wins) - length(consensus_wins[consensus_wins %in% mrs_list[[cancer_label]]])
-  contingency_table["non_MR", "expression_wins"] <- length(expression_wins) - length(consensus_wins[expression_wins %in% mrs_list[[cancer_label]]])
+  contingency_table["oncogene", "consensus_wins"] <- length(consensus_wins[consensus_wins %in% oncogenes])
+  contingency_table["oncogene", "expression_wins"] <- length(consensus_wins[expression_wins %in% oncogenes])
+  contingency_table["non_oncogene", "consensus_wins"] <- length(consensus_wins) - length(consensus_wins[consensus_wins %in% oncogenes])
+  contingency_table["non_oncogene", "expression_wins"] <- length(expression_wins) - length(consensus_wins[expression_wins %in% oncogenes])
   
   fisher_test_list[[cancer_label]] <- fisher.test(contingency_table)[["p.value"]]
 }
