@@ -1,3 +1,8 @@
+#This script creates Fig. 2B,C,D
+#Input: correlations between activity/expression and sensitivity
+#Ouput: a csv file containing the average correlation per cancer type, for each method
+#Output: The plot in Fig 2B,C,D
+
 library(tidyverse)
 library(stringr)
 

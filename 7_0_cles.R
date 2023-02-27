@@ -1,3 +1,8 @@
+#This script calculates CLES score and Wilcoxon p-value for every sometimes-essential gene (at least 3 cell lines)
+#comparing wheteher essential genes are more likely to have a higher activity
+#Input: activity scores/expression values
+#Ouput: CLES and Wilcoxon Test p-values 
+
 library(tidyverse)
 library(bmbstats)
 library(ggpubr)
@@ -21,7 +26,7 @@ okabe_7col <- c("#000000", "#009E73", "#D55E00", "#E69F00", "#56B4E9", "#0072B2"
 
 #'*select genes that are NOT essential in at least 3 cell lines*
 
-filter_genes_non_essential_at_least_one_cell_line <- function(df_genes_cell_lines) {
+filter_genes_non_essential_at_least_three_cell_lines <- function(df_genes_cell_lines) {
   
   gene_vector <- c()
   count <- 0
@@ -35,7 +40,7 @@ filter_genes_non_essential_at_least_one_cell_line <- function(df_genes_cell_line
       }
       }
     }
-    if (count >= 3) gene_vector <- c(gene_vector, gene) 
+    if (count >= 3) gene_vector <- c(gene_vector, gene) #3 cell lines as the threshold for sometimes essential
     count <- 0
   }
   
@@ -47,7 +52,7 @@ filter_genes_non_essential_at_least_one_cell_line <- function(df_genes_cell_line
 ############################################################
 #'*select genes that are essential in at least 3 cell lines*
 
-filter_genes_essential_at_least_one_cell_line <- function(df_genes_cell_lines) {
+filter_genes_essential_at_least_three_cell_lines <- function(df_genes_cell_lines) {
   gene_vector <- c()
   count <- 0
   for (gene in rownames(gene_effect_cancer)) {#each gene
@@ -60,7 +65,7 @@ filter_genes_essential_at_least_one_cell_line <- function(df_genes_cell_lines) {
       }
       }
     }
-    if (count >= 3) gene_vector <- c(gene_vector, gene) 
+    if (count >= 3) gene_vector <- c(gene_vector, gene) #3 cell lines as the threshold for sometimes essential
     count <- 0
   }
   
@@ -125,8 +130,8 @@ for (cancer_label in cancer_list) {
   }
   
   gene_effect_reg_genes_filtered <- gene_effect_cancer %>%
-    filter_genes_non_essential_at_least_one_cell_line() %>%   #keep only sometimes essential genes
-    filter_genes_essential_at_least_one_cell_line %>% 
+    filter_genes_non_essential_at_least_three_cell_lines() %>%   #keep only sometimes essential genes
+    filter_genes_essential_at_least_three_cell_lines() %>% 
     tibble::rownames_to_column(var = "Gene") %>%   #set gene symbols as a column
     tidyr::pivot_longer(cols = -Gene, names_to = "cell_line", values_to = "gene_effect") %>%
     dplyr::mutate(essential = case_when(gene_effect < -0.6 ~ 1,  #1 to mark essential genes

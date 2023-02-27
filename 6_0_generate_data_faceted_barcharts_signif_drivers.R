@@ -1,6 +1,6 @@
 #This scripts generates the data in order to create Fig 4B,C,D, S3
 #Input: correlations between activity and essentiality, no. cell lines per cancer type
-#Output: data to be fed for batcharts in script 6_1
+#Output: data to be fed for barcharts in script 6_1
 
 library(tidyverse)
 

@@ -1,3 +1,7 @@
+#This scripts generates the data in order to create Fig 5A,B,C, S4
+#Input: CLES, Wilcoxon p-values from script 7_0
+#Output: data to be fed for barcharts in script 7_1
+
 library(tidyverse)
 library(magrittr)
 library(stringr)
