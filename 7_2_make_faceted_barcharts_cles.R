@@ -1,4 +1,4 @@
-#This script creates Fig 5A,B,C,S4
+#This script creates Fig 5A,B,C,S3
 #Input: .csv files output by script 7_1
 #Output: barcharts showing CLES values, sorted
 
