@@ -1,4 +1,4 @@
-#This script produces Fig S4
+#This script produces Fig S3
 #Input: for each regulons source and cancer type, the inferred activity and mRNA expression
 #Output: boxplot comparing the per gene variance in activity/expression acorss all regulon sources and cancer types
 
