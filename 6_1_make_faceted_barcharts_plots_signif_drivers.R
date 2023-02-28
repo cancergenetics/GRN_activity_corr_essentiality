@@ -1,4 +1,4 @@
-#This script creates Fig 4B,C,D,S3
+#This script creates Fig 4B,C,D,S2
 #Input: .csv files output by script 6_0
 #Output: barcharts counting absolute correlations 
         #barcharts showing the two types of correlations: increase in sensitivity with increase in activity/expression
