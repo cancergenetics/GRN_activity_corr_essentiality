@@ -42,9 +42,9 @@ For more information on packarat visit: https://github.com/rstudio/packrat/
 | 5_2_make_dotplots.R                                 | Fig. 3A, B        | Plot alinearverage \|R\| for each cancer type using matched and mismatched regulons |
 | misc_toy_plot_pos_vs_neg_corr.R                     | Fig. 4A           | Example plot illustrating type of correlation between activity and senstivity |
 | 5_3_linear_modelling.R                              | Fig. S1           | Each term's contribution to the linear model (adjusted R-squared) |
-| 6_1_make_faceted_barcherts_plots_signif_genes.R     | Fig. 4B, C, D, S3 | Faceted barchart for each cancer type with \|R\| stratified from 0.2 to 1 |
-| 6_2_variance_per_gene_method_comparison.R           | Fig. S4           | Boxplot showing per gene variance across activity methods |
-| 7_2_make_faceted_barcherts_cles.R                   | Fig. 5A, B, C, S5 | Faceted barchart for each cancer type with CLES (binary essentiality pred) |
+| 6_1_make_faceted_barcherts_plots_signif_genes.R     | Fig. 4B, C, D, S2 | Faceted barchart for each cancer type with \|R\| stratified from 0.2 to 1 |
+| 6_2_variance_per_gene_method_comparison.R           | Fig. S3           | Boxplot showing per gene variance across activity methods |
+| 7_2_make_faceted_barcherts_cles.R                   | Fig. 5A, B, C, S4 | Faceted barchart for each cancer type with CLES (binary essentiality pred) |
 
 ## Session Info
 
