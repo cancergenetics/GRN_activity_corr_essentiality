@@ -1,6 +1,6 @@
 # Gene essentiality in cancer is better predicted by mRNA abundance than by gene regulatory network-inferred activity
 
-The scripts available perform the analysis presented in the manuscript by Tudose, Bond and Ryan: Gene essentiality in cancer is better predicted by mRNA abundance than by gene regulatory network-inferred activity
+The scripts available perform the analysis presented in the manuscript by Tudose, Bond and Ryan, available on *bioRxiv*: https://www.biorxiv.org/content/10.1101/2023.03.02.530664v2
 
 Each script can be run in Rstudio. However, some of the scripts require more computational time, so it is recommended the analysis is at least partly run on a server using nohup and R CMD BATCH. This is especially the case for steps 1.0-4.0
 
