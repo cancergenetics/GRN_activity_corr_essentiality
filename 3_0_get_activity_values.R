@@ -18,7 +18,9 @@ t_gene_exp <- read.csv("./depmap_input_data/wrangled_input_data/t_gene_exp_filte
 # First select which regulons to use: ----
 regulons_types <- "aracne" #OR
 regulons_types <- "grndb" #OR
-regulons_types <- "dorothea"
+regulons_types <- "dorothea" #OR
+regulons_types <- "aracne_ccle" #OR
+regulons_types <- "grndb_ccle"
 
 cancer_list = c("aml", "gbm", "luad", "coad", "brca", 
                 "paad", "hnsc", "stad", "blca", "kirc")
@@ -51,7 +53,7 @@ if (regulons_types == "aracne") {
   aracne_stad <- read.csv("./regulons/aracne_regulons/stad_aracne_regulon.csv")
   aracne_blca <- read.csv("./regulons/aracne_regulons/blca_aracne_regulon.csv")
   aracne_kirc <- read.csv("./regulons/aracne_regulons/kirc_aracne_regulon.csv")
-
+  
   regulons_list = c("aracne_aml", "aracne_gbm", "aracne_luad", "aracne_coad", 
                     "aracne_brca", "aracne_paad", "aracne_hnsc", 
                     "aracne_stad", "aracne_blca", "aracne_kirc")
@@ -75,7 +77,7 @@ if (regulons_types == "aracne") {
                     "grndb_coad", "grndb_brca", 
                     "grndb_paad", "grndb_hnsc", "grndb_stad", 
                     "grndb_blca", "grndb_kirc")
-
+  
 } else if(regulons_types == "dorothea") {
   
   #load dorothea regulons
@@ -89,10 +91,29 @@ if (regulons_types == "aracne") {
   
   regulons_list <- c("dorothea")
   
+} else if (regulons_types == "aracne_ccle") {
+  aracne_ccle_luad <- read.csv("./regulons/aracne_ccle_regulons/luad_aracne_ccle_regulon.csv")
+  aracne_ccle_brca <- read.csv("./regulons/aracne_ccle_regulons/brca_aracne_ccle_regulon.csv")
+  aracne_ccle_coad <- read.csv("./regulons/aracne_ccle_regulons/coad_aracne_ccle_regulon.csv")
+  aracne_ccle_paad <- read.csv("./regulons/aracne_ccle_regulons/paad_aracne_ccle_regulon.csv")
+  
+  regulons_list = c("aracne_ccle_brca", "aracne_ccle_coad", "aracne_ccle_luad", "aracne_ccle_paad")
+  cancer_list = c("brca","coad", "luad", "paad")
+  
+}  else if (regulons_types == "grndb_ccle") {
+  grndb_ccle_luad <- read.csv("./regulons/grndb_ccle_regulons/luad_grndb_ccle_regulon.csv")
+  grndb_ccle_brca <- read.csv("./regulons/grndb_ccle_regulons/brca_grndb_ccle_regulon.csv")
+  grndb_ccle_coad <- read.csv("./regulons/grndb_ccle_regulons/coad_grndb_ccle_regulon.csv")
+  grndb_ccle_paad <- read.csv("./regulons/grndb_ccle_regulons/paad_grndb_ccle_regulon.csv")
+  
+  regulons_list = c("grndb_ccle_brca", "grndb_ccle_coad", "grndb_ccle_luad", "grndb_ccle_paad")
+  cancer_list = c("brca","coad", "luad", "paad")
+  
 } else {
   print("No regulons selected")
 }
 
+start_time <- Sys.time()
 
 # Calculating activity ----
 for (cancer_label in cancer_list) { #loop1 for each cancer
@@ -156,9 +177,9 @@ for (cancer_label in cancer_list) { #loop1 for each cancer
     
     #makes sure only regulatory genes in all methods are used downstream
     common_genes <- Reduce(intersect,  
-                             list(rownames(results.VIPER),rownames(results.ULM), 
-                                  rownames(results.W.Sum), rownames(results.W.Mean),
-                                  rownames(results.MLM), rownames(results.Consensus)))
+                           list(rownames(results.VIPER),rownames(results.ULM), 
+                                rownames(results.W.Sum), rownames(results.W.Mean),
+                                rownames(results.MLM), rownames(results.Consensus)))
     
     gene_effect_tmp_signif_reg_genes <- gene_effect_tmp %>%
       subset(select = common_genes) 
@@ -172,7 +193,7 @@ for (cancer_label in cancer_list) { #loop1 for each cancer
     #create directories for output
     dir.create(paste0("./results/results_matrices_per_combination/", regulons_types, "/", regulon, "_", cancer_label))
     output_dir <- paste0("./results/results_matrices_per_combination/", 
-                                regulons_types, "/", regulon, "_", cancer_label)
+                         regulons_types, "/", regulon, "_", cancer_label)
     
     #save the results
     write.csv(results.VIPER, file = paste0(output_dir, "/", regulon, "_", cancer_label, "_viper.csv"))
@@ -187,3 +208,7 @@ for (cancer_label in cancer_list) { #loop1 for each cancer
     print(paste(regulon,"+", cancer_label, "DONE")) #shows progress on the for loop
   }
 }
+
+end_time <- Sys.time() 
+time_elapsed <- end_time - start_time
+print(time_elapsed)

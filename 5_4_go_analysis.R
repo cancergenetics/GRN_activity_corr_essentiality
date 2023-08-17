@@ -93,3 +93,23 @@ for (cancer_type in cancer_list) {
   write.csv(go_consensus_wins, file = paste0("./results/go_enrichment/", regulons, "_", cancer_type, "_consensus_wins.csv"), row.names = FALSE, quote = FALSE)
   
 }
+
+
+export VERSION=1.11 OS=linux ARCH=amd64 && \
+    wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
+    sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
+    rm go$VERSION.$OS-$ARCH.tar.gz
+
+export VERSION=v3.11.3 # or another tag or branch if you like && \
+    cd $GOPATH/src/github.com/sylabs/singularity && \
+    git fetch && \
+    git checkout $VERSION # omit this command to install the latest bleeding edge code from master
+
+
+export VERSION=3.11.3 && # adjust this as necessary \
+    mkdir -p $GOPATH/src/github.com/sylabs && \
+    cd $GOPATH/src/github.com/sylabs && \
+    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
+    tar -xzf singularity-ce-${VERSION}.tar.gz && \
+    cd ./singularity-ce-3.11.3 && \
+    ./mconfig

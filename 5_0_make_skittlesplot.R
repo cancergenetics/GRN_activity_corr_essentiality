@@ -1,7 +1,7 @@
 #This script creates Fig. 2B,C,D
 #Input: correlations between activity/expression and sensitivity
-#Ouput: a csv file containing the average correlation per cancer type, for each method
-#Output: The plot in Fig 2B,C,D
+#Output: a csv file containing the average correlation per cancer type, for each method
+#Output: The plot in Fig 2B,C,D,S8A,S8B
 
 library(tidyverse)
 library(stringr)
@@ -9,13 +9,18 @@ library(stringr)
 #select regulons
 regulons <- "aracne" #OR
 regulons <- "dorothea" #OR
-regulons <- "grndb"
+regulons <- "grndb" #OR
+regulons <- "aracne_ccle" #OR
+regulons <- "grndb_ccle"
 
 input_dir <- paste0("./results/correlation_matrices/", regulons)
 
+#select cancer list
 cancer_list = c("aml", "blca", "brca", "coad",
                 "gbm", "hnsc", "kirc", "luad",
-                "paad", "stad")
+                "paad", "stad") #OR
+
+cancer_list = c("brca","coad", "luad", "paad") #if using aracne_ccle or grndb_ccle
 
 methods <- c("Expression", "Consensus", "ULM", "MLM", "VIPER", "W.Mean", "W.Sum")
 
@@ -38,7 +43,7 @@ cancer_method_matched_regulon$Method <- rownames(cancer_method_matched_regulon)
 
 #very important: order in cancer_list must be the same as order in the activity files: VIPER, ULM, etc
 for (method in methods) {
-  for (i in 1:10) {
+  for (i in 1:length(cancer_list)) {
     if (regulons != "dorothea") {
       cancer_method_matched_regulon[method, i] <- eval(parse(text = method))[i,i]
     } else {
@@ -120,5 +125,6 @@ plot <- cancer_method_matched_regulon_pivoted %>%
 
 #saving plot
 ggsave(paste0("./plots/skittles_plots/", regulons, "_expr_included_skittles_plot_methods_comparison.pdf"), 
-       plot = plot, width = 22.4, height = 15, 
+       plot = plot, width = 14, height = 15, 
        dpi = 1000, units = "cm", device = cairo_pdf) 
+#width 22.4 for normal; 12 for ccle regulosn

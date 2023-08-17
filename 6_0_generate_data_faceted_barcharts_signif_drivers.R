@@ -7,13 +7,25 @@ library(tidyverse)
 #select regulons
 regulons <- "aracne" #OR
 regulons <- "grndb" #OR
-regulons <- "dorothea"
+regulons <- "dorothea" #OR
+regulons <- "aracne_ccle" #OR
+regulons <- "grndb_ccle"
 
 #select cancer list analysis
 cancer_list = c("aml", "blca", "brca", "coad",
                 "gbm", "hnsc", "kirc", "luad",
                 "paad", "stad") #OR
+
+cancer_list = c("brca","coad", "luad", "paad") #for aracne_ccle and grndb_ccle #OR
+
 cancer_list = c("pancancer") #only works with dorothea regulons
+
+#If the pancancer analysis is chosen - choose a threshold for essential/non-essential genes:
+#1 percent (i.e., 9 cell lines) in which we are looking for a gene to be essential/non-essential in order to test it
+#10 percent (i.e., 97 cell lines) in which we are looking for a gene to be essential/non-essential in order to test it
+threshold_cell_lines <- "1percent"
+threshold_cell_lines <- "5percent"
+threshold_cell_lines <- "10percent"
 
 methods <- c("ULM", "VIPER", "W.Mean", "Consensus", "Expression")
 
@@ -21,9 +33,9 @@ methods <- c("ULM", "VIPER", "W.Mean", "Consensus", "Expression")
 for (cancer_label in cancer_list) {
   if(cancer_label == "pancancer") {
     if (regulons == "dorothea") { #regulons dorothea, pancancer
-      corr_driver_act_exp_matrix <- read.csv("./results/results_matrices_per_combination/dorothea/dorothea_pancancer/1percent_filter_corr_scores_filtered_dorothea_pancancer.csv", row.names = 1)
+      corr_driver_act_exp_matrix <- read.csv(paste0("./results/results_matrices_per_combination/dorothea/dorothea_pancancer/", threshold_cell_lines, "_filter_corr_scores_filtered_dorothea_pancancer.csv"), row.names = 1)
       
-      no_of_cell_lines <- read.csv("./results/results_matrices_per_combination/dorothea/dorothea_pancancer/dorothea_pancancer_dorothea_consensus.csv", row.names = 1) %>%
+      no_of_cell_lines <- read.csv("./results/results_matrices_per_combination/dorothea/dorothea_pancancer/dorothea_pancancer_consensus.csv", row.names = 1) %>%
         ncol()
     } else { #regulons not dorothea, pancancer
            print("You can't pair cancer type-specific regulons with the pancancer analysis")
@@ -93,9 +105,17 @@ for (cancer_label in cancer_list) {
   
   bar_signif_correlations$Percentage_signif <- (bar_signif_correlations$signif_drivers/bar_signif_correlations$total_drivers)*100
   
-  write.csv(bar_signif_correlations, 
-            file = paste0("./results/barcharts_data/", 
-                          cancer_label, "_", regulons, "_number_signif_corr.csv"), row.names = FALSE)
+  
+  if(cancer_label == "pancancer") {
+    write.csv(bar_signif_correlations,
+              file = paste0("./results/barcharts_data/", threshold_cell_lines, "_",
+                            cancer_label, "_", regulons, "_number_signif_corr.csv"), row.names = FALSE)    
+  } else {
+    write.csv(bar_signif_correlations,
+              file = paste0("./results/barcharts_data/",
+                            cancer_label, "_", regulons, "_number_signif_corr.csv"), row.names = FALSE)
+  }
+
   
   
   #2. creating data for positive v negative barcharts
@@ -135,8 +155,14 @@ for (cancer_label in cancer_list) {
   }
   
   
-  write.csv(bar_pos_vs_neg, 
-            file = paste0("./results/barcharts_data/", 
-                          cancer_label, "_", regulons, "_pos_vs_neg_corr.csv"), row.names = FALSE)  
+  if(cancer_label == "pancancer") {
+    write.csv(bar_pos_vs_neg, 
+              file = paste0("./results/barcharts_data/", threshold_cell_lines, "_",
+                            cancer_label, "_", regulons, "_pos_vs_neg_corr.csv"), row.names = FALSE)      
+  } else {
+    write.csv(bar_pos_vs_neg, 
+              file = paste0("./results/barcharts_data/", 
+                            cancer_label, "_", regulons, "_pos_vs_neg_corr.csv"), row.names = FALSE)  
+  }
   
 }

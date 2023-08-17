@@ -1,4 +1,4 @@
-#This script creates Fig 4B,C,D,S2
+#This script creates Fig 4B,C,D,S3,S8C,D,E,F
 #Input: .csv files output by script 6_0
 #Output: barcharts counting absolute correlations 
         #barcharts showing the two types of correlations: increase in sensitivity with increase in activity/expression
@@ -12,22 +12,42 @@ library(Cairo)
 #select regulons
 regulons <- "aracne" #OR
 regulons <- "grndb" #OR
-regulons <- "dorothea"
+regulons <- "dorothea" #OR
+regulons <- "aracne_ccle" #OR
+regulons <- "grndb_ccle"
 
 #select cancer list analysis
 cancer_list = c("aml", "blca", "brca", "coad",
                 "gbm", "hnsc", "kirc", "luad",
                 "paad", "stad") #OR
+
+cancer_list = c("brca","coad", "luad", "paad") #for aracne_ccle and grndb_ccle #OR
+
 cancer_list = c("pancancer") #only works with dorothea regulons
+
+
+#If the pancancer analysis is chosen - choose a threshold for essential/non-essential genes:
+#1 percent (i.e., 9 cell lines) in which we are looking for a gene to be essential/non-essential in order to test it
+#10 percent (i.e., 97 cell lines) in which we are looking for a gene to be essential/non-essential in order to test it
+threshold_cell_lines <- "1percent"
+threshold_cell_lines <- "5percent"
+threshold_cell_lines <- "10percent"
 
 #1. creating plots for absolute correlations
 barchart_absolute <- NULL
 
 #merge results for each cancer type
 for (cancer in cancer_list) {
-  barchart_absolute_cancer <- read.csv(paste0("./results/barcharts_data/", 
-                                     cancer, "_", regulons, "_number_signif_corr.csv")) %>%
-    mutate_at("Cancer", .funs = toupper)
+  if(cancer == "pancancer") {
+    barchart_absolute_cancer <- read.csv(paste0("./results/barcharts_data/", threshold_cell_lines, "_",
+                                                cancer, "_", regulons, "_number_signif_corr.csv")) %>%
+      mutate_at("Cancer", .funs = toupper)     
+  } else {
+    barchart_absolute_cancer <- read.csv(paste0("./results/barcharts_data/", 
+                                                cancer, "_", regulons, "_number_signif_corr.csv")) %>%
+      mutate_at("Cancer", .funs = toupper)  
+  }
+
   barchart_absolute <- rbind(barchart_absolute, barchart_absolute_cancer)  
 }
 
@@ -45,15 +65,15 @@ vector_sorted_best_method <- barchart_absolute %>%
   as.vector()
 
 #make factors for ggplot to arrange in order of best to worst performing method
-barchart_absolute$Method <- factor(bar_signif_correlations$Method, 
+barchart_absolute$Method <- factor(barchart_absolute$Method, 
                           levels = vector_sorted_best_method)
 
 #sets parameters for plot according to type of analysis chosen: either pancancer or per cancer type
-if (cancer_list == "pancancer") {
+if (cancer == "pancancer") {
   height <- 7.5
   width <- 15
-  filename_absolute <- paste0("./plots/barcharts/1percent_", regulons, "_barcharts_5methods.pdf")
-  filename_pos_vs_neg <- paste0("./plots/barcharts/1percent_", regulons, "_pos_vs_neg_5methods.pdf")
+  filename_absolute <- paste0("./plots/barcharts/", threshold_cell_lines, "_", regulons, "_barcharts_5methods.pdf")
+  filename_pos_vs_neg <- paste0("./plots/barcharts/", threshold_cell_lines, "_", regulons, "_pos_vs_neg_5methods.pdf")
   axis_label_absolute <- "Genes significantly correlated\nwith CRISPR gene sensitivity (%)"
   axis_label_pos_vs_neg <- "Genes significantly correlated\nwith CRISPR gene sensitivity (count)"
 } else {
@@ -64,7 +84,7 @@ if (cancer_list == "pancancer") {
   axis_label_absolute <- "Genes significantly correlated with CRISPR gene sensitivity (%)"
   axis_label_pos_vs_neg <- "Genes significantly correlated with CRISPR gene sensitivity (count)"
 }
-
+width <- 20
 #faceted barchart absolute correlations
 plot_barchart_absolute <- barchart_absolute %>%
   ggplot() +
@@ -85,8 +105,16 @@ plot_barchart_absolute <- barchart_absolute %>%
 barchart_pos_vs_neg <- NULL
 
 for (cancer in cancer_list) {
-  barchart_pos_vs_neg_cancer <- read.csv(paste0("./results/barcharts_data/", 
-                                     cancer, "_", regulons, "_pos_vs_neg_corr.csv"))
+  if(cancer == "pancancer") {
+    barchart_pos_vs_neg_cancer <- read.csv(paste0("./results/barcharts_data/", threshold_cell_lines, "_",
+                                                  cancer, "_", regulons, "_pos_vs_neg_corr.csv")) %>%
+      mutate_at("Cancer", .funs = toupper)        
+  } else {
+    barchart_pos_vs_neg_cancer <- read.csv(paste0("./results/barcharts_data/", 
+                                                  cancer, "_", regulons, "_pos_vs_neg_corr.csv")) %>%
+      mutate_at("Cancer", .funs = toupper)     
+  }
+
   barchart_pos_vs_neg <- rbind(barchart_pos_vs_neg, barchart_pos_vs_neg_cancer)  
 }
 

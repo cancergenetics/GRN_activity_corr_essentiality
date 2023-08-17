@@ -6,26 +6,45 @@ mkdir tcga_data
 mkdir regulons
 mkdir ./regulons/aracne_regulons
 mkdir ./regulons/grndb_regulons
+mkdir ./regulons/aracne_ccle_regulons
+mkdir ./regulons/grndb_ccle_regulons
 
 mkdir results
 mkdir ./results/results_matrices_per_combination
 mkdir ./results/results_matrices_per_combination/aracne
 mkdir ./results/results_matrices_per_combination/grndb
 mkdir ./results/results_matrices_per_combination/dorothea
+mkdir ./results/results_matrices_per_combination/aracne_ccle
+mkdir ./results/results_matrices_per_combination/grndb_ccle
 
 mkdir ./results/correlation_matrices
 mkdir ./results/correlation_matrices/aracne
 mkdir ./results/correlation_matrices/grndb
 mkdir ./results/correlation_matrices/dorothea
+mkdir ./results/correlation_matrices/aracne_ccle
+mkdir ./results/correlation_matrices/grndb_ccle
+
+mkdir ./results/individual_genes
+mkdir ./results/individual_genes/grndb
+mkdir ./results/individual_genes/dorothea
+mkdir ./results/individual_genes/aracne
 
 mkdir ./results/barcharts_data
 mkdir ./results/plots_data
 mkdir ./results/go_enrichment
 
+mkdir ./results/individual_genes
+mkdir ./results/individual_genes/grndb
+mkdir ./results/individual_genes/dorothea
+mkdir ./results/individual_genes/aracne
+
 mkdir plots
 mkdir ./plots/skittles_plots
 mkdir ./plots/dotplots
 mkdir ./plots/barcharts
+
+mkdir ccle_regulons_input
+mkdir aracne_output
 
 cd ./tcga_data
 wget https://xena.treehouse.gi.ucsc.edu/download/TumorCompendium_v10_PolyA_hugo_log2tpm_58581genes_2019-07-25.tsv
@@ -69,3 +88,4 @@ wget https://www.cell.com/cms/10.1016/j.cell.2020.11.045/attachment/d212e665-907
 #get decoupleR v2.1.8 from github for full code reproducibility
 wget https://codeload.github.com/saezlab/decoupleR/zip/e8b80506c74e90d81bb51aa326fefd74422a3752
 tar -czvf decoupleR.tar.gz e8b80506c74e90d81bb51aa326fefd74422a3752
+

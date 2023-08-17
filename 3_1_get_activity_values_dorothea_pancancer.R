@@ -95,7 +95,8 @@ gene_effect_signif_reg_genes <- gene_effect %>% #makes sure only drivers in all 
 
 
 t_gene_exp_subset <- t_gene_exp %>%  #makes sure only drivers in all methods are used downstream
-  dplyr::filter(rownames(t_gene_exp) %in% common_genes)
+  dplyr::filter(rownames(t_gene_exp) %in% common_genes) %>%
+  dplyr::select(rownames(gene_effect_signif_reg_genes))
 
 
 gene_effect_signif_reg_genes <- as.data.frame(t(as.matrix(gene_effect_signif_reg_genes))) #transposing

@@ -39,7 +39,7 @@ for (cancer_type in cancer_list) {
   #keep only genes essential in at least one cell line and NON-essential in at least one cell line
   t_gene_effect_per_cancer <- 
     t_gene_effect_per_cancer[(rownames(t_gene_effect_per_cancer) %in% 
-                                c(essential_genes_per_cancer, non_essential_genes_per_cancer)), ]
+                                intersect(essential_genes_per_cancer, non_essential_genes_per_cancer)), ]
   
   
   #sometimes essential genes per cancer

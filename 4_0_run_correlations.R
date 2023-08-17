@@ -6,7 +6,9 @@ library(reshape2)
 #select which regulons to use:
 regulons_types <- "aracne" #OR
 regulons_types <- "grndb" #OR
-regulons_types <- "dorothea"
+regulons_types <- "dorothea" #OR
+regulons_types <- "aracne_ccle" #OR
+regulons_types <- "grndb_ccle"
 
 cancer_list = c("aml", "blca", "brca", "coad",
                 "gbm", "hnsc", "kirc", "luad",
@@ -25,6 +27,24 @@ if (regulons_types == "aracne") {
   
 } else if(regulons_types == "dorothea"){
   regulons_list = c("dorothea")
+  
+} else if (regulons_types == "aracne_ccle") {
+  aracne_ccle_luad <- read.csv("./regulons/aracne_ccle_regulons/luad_aracne_ccle_regulon.csv")
+  aracne_ccle_brca <- read.csv("./regulons/aracne_ccle_regulons/brca_aracne_ccle_regulon.csv")
+  aracne_ccle_coad <- read.csv("./regulons/aracne_ccle_regulons/coad_aracne_ccle_regulon.csv")
+  aracne_ccle_paad <- read.csv("./regulons/aracne_ccle_regulons/paad_aracne_ccle_regulon.csv")
+  
+  regulons_list = c("aracne_ccle_brca", "aracne_ccle_coad", "aracne_ccle_luad", "aracne_ccle_paad")
+  cancer_list = c("brca","coad", "luad", "paad")
+  
+}  else if (regulons_types == "grndb_ccle") {
+  grndb_ccle_luad <- read.csv("./regulons/grndb_ccle_regulons/luad_grndb_ccle_regulon.csv")
+  grndb_ccle_brca <- read.csv("./regulons/grndb_ccle_regulons/brca_grndb_ccle_regulon.csv")
+  grndb_ccle_coad <- read.csv("./regulons/grndb_ccle_regulons/coad_grndb_ccle_regulon.csv")
+  grndb_ccle_paad <- read.csv("./regulons/grndb_ccle_regulons/paad_grndb_ccle_regulon.csv")
+  
+  regulons_list = c("grndb_ccle_brca", "grndb_ccle_coad", "grndb_ccle_luad", "grndb_ccle_paad")
+  cancer_list = c("brca","coad", "luad", "paad")
   
 } else {
   print("No regulons selected")
@@ -60,7 +80,6 @@ consensus_minus_exp_corr <- ulm_minus_exp_corr
 consensus_vs_exp_p_values <- ulm_minus_exp_corr
 
 expr_corr_pearson <- ulm_minus_exp_corr
-
 
 for (cancer_label in cancer_list) { #loop1 for each cancer
   for (regulon in regulons_list){ #loop2 for each regulon
